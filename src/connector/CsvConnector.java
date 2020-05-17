@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import model.CaseDescription;
+import model.PatientDescription;
 import ucm.gaia.jcolibri.cbrcore.CBRCase;
 import ucm.gaia.jcolibri.cbrcore.CaseBaseFilter;
 import ucm.gaia.jcolibri.cbrcore.Connector;
@@ -32,11 +33,17 @@ public class CsvConnector implements Connector {
 
 				CBRCase cbrCase = new CBRCase();
 
-				CaseDescription caseDescription = new CaseDescription();
-				
-				// TODO
-				
-				cbrCase.setDescription(caseDescription);
+				PatientDescription patientDescription = new PatientDescription();
+
+				patientDescription.setFirstName(values[0]);
+				patientDescription.setLastName(values[1]);
+				patientDescription.setGender(values[2]);
+				patientDescription.setAge(Integer.parseInt(values[3]));
+				patientDescription.setDisease(values[4]);
+				patientDescription.setMedication(values[5]);
+				patientDescription.setSymptom(values[6]);
+
+				cbrCase.setDescription(patientDescription);
 				cases.add(cbrCase);
 			}
 			br.close();
