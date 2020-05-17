@@ -3,16 +3,11 @@ package cbr;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import connector.CsvConnector;
 import model.CaseDescription;
+import model.PatientDescription;
 import similarity.TableSimilarity;
 import ucm.gaia.jcolibri.casebase.LinealCaseBase;
 import ucm.gaia.jcolibri.cbraplications.StandardCBRApplication;
@@ -68,7 +63,9 @@ public class CbrApplication implements StandardCBRApplication {
 		simConfig.setDescriptionSimFunction(new Average());  // global similarity function = average
 		
 		// simConfig.addMapping(new Attribute("attribute", CaseDescription.class), new Interval(5));
-		// TODO
+		simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(10));
+		simConfig.addMapping(new Attribute("gender", PatientDescription.class), new Equal());
+		simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
 
 		// Equal - returns 1 if both individuals are equal, otherwise returns 0
 		// Interval - returns the similarity of two number inside an interval: sim(x,y) = 1-(|x-y|/interval)
@@ -78,7 +75,13 @@ public class CbrApplication implements StandardCBRApplication {
 		// EnumDistance - returns the similarity of two enum values as the their distance: sim(x,y) = |ord(x) - ord(y)|
 		// EnumCyclicDistance - computes the similarity between two enum values as their cyclic distance
 		// Table - uses a table to obtain the similarity between two values. Allowed values are Strings or Enums. The table is read from a text file.
-		// TableSimilarity(List<String> values).setSimilarity(value1,value2,similarity) 
+		// TableSimilarity(List<String> values).setSimilarity(value1,value2,similarity)
+
+		TableSimilarity medicationSimilarity = new TableSimilarity((Arrays.asList(new String[] {"permetrin","benzocaine","sumporna_krema","prednizon"})));
+		medicationSimilarity.setSimilarity("permetrin", "benzocaine", .9);
+		medicationSimilarity.setSimilarity("sumporna_krema", "benzocaine", .7);
+		medicationSimilarity.setSimilarity("prednizon", "sumporna_krema", .7);
+		simConfig.addMapping(new Attribute("medication", PatientDescription.class), medicationSimilarity);
 	}
 
 	public void cycle(CBRQuery query) throws ExecutionException {
@@ -109,11 +112,14 @@ public class CbrApplication implements StandardCBRApplication {
 			recommender.preCycle();
 
 			CBRQuery query = new CBRQuery();
-			CaseDescription caseDescription = new CaseDescription();
+			PatientDescription patientDescription = new PatientDescription();
+			patientDescription.setAge(26);
+			patientDescription.setGender("Male");
+			patientDescription.setSymptom("plikovi");
 			
 			// TODO
 			
-			query.setDescription( caseDescription );
+			query.setDescription( patientDescription );
 
 			recommender.cycle(query);
 

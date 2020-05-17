@@ -4,8 +4,8 @@ import ucm.gaia.jcolibri.cbrcore.Attribute;
 import ucm.gaia.jcolibri.cbrcore.CaseComponent;
 
 public class PatientDescription implements CaseComponent {
-    private String firstName;
-    private String lastName;
+    //private String firstName;
+    //private String lastName;
     private String gender;
     private int age;
     private String disease;
@@ -14,7 +14,7 @@ public class PatientDescription implements CaseComponent {
 
     public PatientDescription() {
     }
-
+/*
     public String getFirstName() {
         return firstName;
     }
@@ -30,7 +30,7 @@ public class PatientDescription implements CaseComponent {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
+*/
     public String getGender() {
         return gender;
     }
@@ -74,8 +74,8 @@ public class PatientDescription implements CaseComponent {
     @Override
     public String toString() {
         return "PatientDescription{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+   /*             "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +*/
                 ", gender='" + gender + '\'' +
                 ", age=" + age +
                 ", disease='" + disease + '\'' +
