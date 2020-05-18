@@ -1,19 +1,18 @@
 package connector;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-
-import model.CaseDescription;
 import model.PatientDescription;
 import ucm.gaia.jcolibri.cbrcore.CBRCase;
 import ucm.gaia.jcolibri.cbrcore.CaseBaseFilter;
 import ucm.gaia.jcolibri.cbrcore.Connector;
 import ucm.gaia.jcolibri.exception.InitializingException;
 import ucm.gaia.jcolibri.util.FileIO;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class CsvConnector implements Connector {
 	
@@ -41,7 +40,7 @@ public class CsvConnector implements Connector {
 				patientDescription.setGender(values[3]);
 				patientDescription.setAge(Integer.parseInt(values[2]));
 				patientDescription.setDisease(values[6]);
-				patientDescription.setMedication(values[5]);
+				patientDescription.setMedication(Arrays.asList(values[5].split(",")));
 				patientDescription.setSymptom(Arrays.asList(values[4].split(",")));
 
 				cbrCase.setDescription(patientDescription);

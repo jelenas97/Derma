@@ -11,7 +11,7 @@ public class PatientDescription implements CaseComponent {
     private String gender;
     private int age;
     private String disease;
-    private String medication;
+    private List<String> medication;
     private List<String> symptom;
 
     public PatientDescription() {
@@ -57,13 +57,6 @@ public class PatientDescription implements CaseComponent {
         this.disease = disease;
     }
 
-    public String getMedication() {
-        return medication;
-    }
-
-    public void setMedication(String medication) {
-        this.medication = medication;
-    }
 
     public List<String> getSymptom() {
         return symptom;
@@ -76,14 +69,20 @@ public class PatientDescription implements CaseComponent {
     @Override
     public String toString() {
         return "PatientDescription{" +
-   /*             "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +*/
-                ", gender='" + gender + '\'' +
+                "gender='" + gender + '\'' +
                 ", age=" + age +
                 ", disease='" + disease + '\'' +
-                ", medication='" + medication + '\'' +
-                ", symptom='" + symptom + '\'' +
+                ", medication=" + medication +
+                ", symptom=" + symptom +
                 '}';
+    }
+
+    public List<String> getMedication() {
+        return medication;
+    }
+
+    public void setMedication(List<String> medication) {
+        this.medication = medication;
     }
 
     @Override
