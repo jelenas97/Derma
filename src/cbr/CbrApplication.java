@@ -24,35 +24,6 @@ public class CbrApplication implements StandardCBRApplication {
 
     NNConfig simConfig;
 
-    public static void main(String[] args) {
-        StandardCBRApplication recommender = new CbrApplication();
-        try {
-            recommender.configure();
-
-            recommender.preCycle();
-
-            CBRQuery query = new CBRQuery();
-            PatientDescription patientDescription = new PatientDescription();
-            //Mladji pacijenti -> veca sansa za pojavom akni
-            patientDescription.setAge(27);
-            patientDescription.setGender("Male");
-            patientDescription.setSymptom("crvenilo");
-
-            //Stariji pacijenti -> veca sansa za kontaktni dermatitis
-//			patientDescription.setAge(50);
-//			patientDescription.setGender("Male");
-//			patientDescription.setSymptom("crvenilo");
-
-            query.setDescription(patientDescription);
-
-            recommender.cycle(query);
-
-            recommender.postCycle();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void cycle(CBRQuery query) throws ExecutionException {
         Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(_caseBase.getCases(), query, simConfig);
         eval = SelectCases.selectTopKRR(eval, 5);
@@ -134,6 +105,43 @@ public class CbrApplication implements StandardCBRApplication {
 
     public void postCycle() throws ExecutionException {
 
+
+	public static void main(String[] args) {
+		StandardCBRApplication recommender = new CbrApplication();
+		try {
+			recommender.configure();
+
+			recommender.preCycle();
+
+			CBRQuery query = new CBRQuery();
+			PatientDescription patientDescription = new PatientDescription();
+			patientDescription.setAge(33);
+			patientDescription.setGender("Male");
+			List<String> symptoms = new ArrayList<String>();
+			symptoms.add("svrab");
+			symptoms.add("papule");
+			patientDescription.setSymptom(symptoms);
+      
+               //Mladji pacijenti -> veca sansa za pojavom akni
+//             patientDescription.setAge(27);
+//             patientDescription.setGender("Male");
+//             patientDescription.setSymptom("crvenilo");
+
+            //Stariji pacijenti -> veca sansa za kontaktni dermatitis
+//			patientDescription.setAge(50);
+//			patientDescription.setGender("Male");
+//			patientDescription.setSymptom("crvenilo");
+			
+			// TODO
+			
+			query.setDescription( patientDescription );
+
+			recommender.cycle(query);
+
+			recommender.postCycle();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
