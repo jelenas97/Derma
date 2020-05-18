@@ -113,9 +113,12 @@ public class CbrApplication implements StandardCBRApplication {
 
 			CBRQuery query = new CBRQuery();
 			PatientDescription patientDescription = new PatientDescription();
-			patientDescription.setAge(26);
+			patientDescription.setAge(33);
 			patientDescription.setGender("Male");
-			patientDescription.setSymptom("plikovi");
+			List<String> symptoms = new ArrayList<String>();
+			symptoms.add("svrab");
+			symptoms.add("papule");
+			patientDescription.setSymptom(symptoms);
 			
 			// TODO
 			

@@ -3,6 +3,7 @@ package connector;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -41,7 +42,7 @@ public class CsvConnector implements Connector {
 				patientDescription.setAge(Integer.parseInt(values[2]));
 				patientDescription.setDisease(values[6]);
 				patientDescription.setMedication(values[5]);
-				patientDescription.setSymptom(values[4]);
+				patientDescription.setSymptom(Arrays.asList(values[4].split(",")));
 
 				cbrCase.setDescription(patientDescription);
 				cases.add(cbrCase);

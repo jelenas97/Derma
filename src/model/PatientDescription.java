@@ -3,6 +3,8 @@ package model;
 import ucm.gaia.jcolibri.cbrcore.Attribute;
 import ucm.gaia.jcolibri.cbrcore.CaseComponent;
 
+import java.util.List;
+
 public class PatientDescription implements CaseComponent {
     //private String firstName;
     //private String lastName;
@@ -10,7 +12,7 @@ public class PatientDescription implements CaseComponent {
     private int age;
     private String disease;
     private String medication;
-    private String symptom;
+    private List<String> symptom;
 
     public PatientDescription() {
     }
@@ -63,11 +65,11 @@ public class PatientDescription implements CaseComponent {
         this.medication = medication;
     }
 
-    public String getSymptom() {
+    public List<String> getSymptom() {
         return symptom;
     }
 
-    public void setSymptom(String symptom) {
+    public void setSymptom(List<String> symptom) {
         this.symptom = symptom;
     }
 
