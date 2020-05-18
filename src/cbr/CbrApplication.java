@@ -10,6 +10,7 @@ import ucm.gaia.jcolibri.exception.ExecutionException;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNConfig;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNScoringMethod;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.global.Average;
+import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equal;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
 import ucm.gaia.jcolibri.method.retrieve.RetrievalResult;
 import ucm.gaia.jcolibri.method.retrieve.selection.SelectCases;
@@ -50,12 +51,20 @@ public class CbrApplication implements StandardCBRApplication {
 //            symptoms.add("svrab");
 
             //Mladji pacijenti -> veca sansa za pojavom akni
-            patientDescription.setAge(27);
+//            patientDescription.setAge(27);
+//            patientDescription.setGender("Male");
+//            List<String> symptoms = new ArrayList<String>();
+//            symptoms.add("papule");
+//            symptoms.add("plikovi");
+
+
+            patientDescription.setAge(26);
             patientDescription.setGender("Male");
+            patientDescription.setDisease("acne_vulgaris");
+            List<String> medication = new ArrayList<String>();
+            medication.add("prednizon");
             List<String> symptoms = new ArrayList<String>();
             symptoms.add("papule");
-            symptoms.add("plikovi");
-
 
             patientDescription.setSymptom(symptoms);
 
@@ -100,7 +109,7 @@ public class CbrApplication implements StandardCBRApplication {
 
         simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(12));
 //		simConfig.addMapping(new Attribute("medication", PatientDescription.class), new MaxString());
-//		simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
+        simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
 
 
 		// Equal - returns 1 if both individuals are equal, otherwise returns 0
