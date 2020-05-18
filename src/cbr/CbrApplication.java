@@ -1,71 +1,55 @@
 package cbr;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.*;
-
 import connector.CsvConnector;
-import model.CaseDescription;
 import model.PatientDescription;
 import similarity.TableSimilarity;
 import ucm.gaia.jcolibri.casebase.LinealCaseBase;
 import ucm.gaia.jcolibri.cbraplications.StandardCBRApplication;
-import ucm.gaia.jcolibri.cbrcore.Attribute;
-import ucm.gaia.jcolibri.cbrcore.CBRCase;
-import ucm.gaia.jcolibri.cbrcore.CBRCaseBase;
-import ucm.gaia.jcolibri.cbrcore.CBRQuery;
-import ucm.gaia.jcolibri.cbrcore.CaseBaseFilter;
-import ucm.gaia.jcolibri.cbrcore.CaseComponent;
-import ucm.gaia.jcolibri.cbrcore.Connector;
-import ucm.gaia.jcolibri.connector.PlainTextConnector;
+import ucm.gaia.jcolibri.cbrcore.*;
 import ucm.gaia.jcolibri.exception.ExecutionException;
-import ucm.gaia.jcolibri.exception.InitializingException;
-import ucm.gaia.jcolibri.extensions.recommendation.casesDisplay.UserChoice;
-import ucm.gaia.jcolibri.extensions.recommendation.conditionals.BuyOrQuit;
-import ucm.gaia.jcolibri.extensions.recommendation.conditionals.ContinueOrFinish;
-import ucm.gaia.jcolibri.extensions.recommendation.navigationByProposing.CriticalUserChoice;
-import ucm.gaia.jcolibri.extensions.recommendation.navigationByProposing.CritiqueOption;
-import ucm.gaia.jcolibri.extensions.recommendation.navigationByProposing.DisplayCasesTableWithCritiquesMethod;
-import ucm.gaia.jcolibri.extensions.recommendation.navigationByProposing.queryElicitation.MoreLikeThis;
-import ucm.gaia.jcolibri.method.gui.formFilling.ObtainQueryWithFormMethod;
-import ucm.gaia.jcolibri.method.retrieve.RetrievalResult;
-import ucm.gaia.jcolibri.method.retrieve.FilterBasedRetrieval.FilterBasedRetrievalMethod;
-import ucm.gaia.jcolibri.method.retrieve.FilterBasedRetrieval.FilterConfig;
-import ucm.gaia.jcolibri.method.retrieve.FilterBasedRetrieval.predicates.NotEqual;
-import ucm.gaia.jcolibri.method.retrieve.FilterBasedRetrieval.predicates.QueryLess;
-import ucm.gaia.jcolibri.method.retrieve.FilterBasedRetrieval.predicates.QueryMore;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNConfig;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNScoringMethod;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.global.Average;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equal;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Table;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Threshold;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.recommenders.InrecaLessIsBetter;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.recommenders.InrecaMoreIsBetter;
+import ucm.gaia.jcolibri.method.retrieve.RetrievalResult;
 import ucm.gaia.jcolibri.method.retrieve.selection.SelectCases;
-import ucm.gaia.jcolibri.util.FileIO;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 public class CbrApplication implements StandardCBRApplication {
 	
 	Connector _connector;  /** Connector object */
 	CBRCaseBase _caseBase;  /** CaseBase object */
 
-	NNConfig simConfig;  /** KNN configuration */
-	
+    NNConfig simConfig;
+
+    public void cycle(CBRQuery query) throws ExecutionException {
+        Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(_caseBase.getCases(), query, simConfig);
+        eval = SelectCases.selectTopKRR(eval, 5);
+        System.out.println("Retrieved cases:");
+        for (RetrievalResult nse : eval)
+            System.out.println(nse.get_case().getDescription() + " -> " + nse.getEval());
+    }
+
+    /**
+     * KNN configuration
+     */
+
 	public void configure() throws ExecutionException {
 		_connector =  new CsvConnector();
-		
+
 		_caseBase = new LinealCaseBase();  // Create a Lineal case base for in-memory organization
-		
+
 		simConfig = new NNConfig(); // KNN configuration
 		simConfig.setDescriptionSimFunction(new Average());  // global similarity function = average
-		
+
 		// simConfig.addMapping(new Attribute("attribute", CaseDescription.class), new Interval(5));
-		simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(10));
-		simConfig.addMapping(new Attribute("gender", PatientDescription.class), new Equal());
-		simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
+
+        simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(12));
+//		simConfig.addMapping(new Attribute("gender", PatientDescription.class), new Equal());
+//		simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
+
 
 		// Equal - returns 1 if both individuals are equal, otherwise returns 0
 		// Interval - returns the similarity of two number inside an interval: sim(x,y) = 1-(|x-y|/interval)
@@ -77,23 +61,38 @@ public class CbrApplication implements StandardCBRApplication {
 		// Table - uses a table to obtain the similarity between two values. Allowed values are Strings or Enums. The table is read from a text file.
 		// TableSimilarity(List<String> values).setSimilarity(value1,value2,similarity)
 
-		TableSimilarity medicationSimilarity = new TableSimilarity((Arrays.asList(new String[] {"permetrin","benzocaine","sumporna_krema","prednizon"})));
-		medicationSimilarity.setSimilarity("permetrin", "benzocaine", .9);
-		medicationSimilarity.setSimilarity("sumporna_krema", "benzocaine", .7);
-		medicationSimilarity.setSimilarity("prednizon", "sumporna_krema", .7);
+        TableSimilarity medicationSimilarity = new TableSimilarity((Arrays.asList("hydroxyzine", "hydrocortisone", "eritromicin", "benadryl", "krotamiton_losion", "krotamiton_krema"
+                , "benzoil_eritromicin", "benzoil_peroksid", "benzoil_klimadicin")));
+        medicationSimilarity.setSimilarity("hydroxyzine", "hydrocortisone", .6);
+        medicationSimilarity.setSimilarity("hydroxyzine", "benadryl", .5);
+        medicationSimilarity.setSimilarity("hydrocortisone", "benadryl", .3);
+        medicationSimilarity.setSimilarity("krotamiton_krema", "krotamiton_losion", .7);
+        medicationSimilarity.setSimilarity("benzoil_eritromicin", "eritromicin", .7);
+        medicationSimilarity.setSimilarity("benzoil_peroksid", "benzoil_eritromicin", .4);
+        medicationSimilarity.setSimilarity("benzoil_peroksid", "benzoil_klimadicin", .6);
+        medicationSimilarity.setSimilarity("eritromicin", "benzoil_eritromicin", .7);
 		simConfig.addMapping(new Attribute("medication", PatientDescription.class), medicationSimilarity);
-	}
 
-	public void cycle(CBRQuery query) throws ExecutionException {
-		Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(_caseBase.getCases(), query, simConfig);
-		eval = SelectCases.selectTopKRR(eval, 5);
-		System.out.println("Retrieved cases:");
-		for (RetrievalResult nse : eval)
-			System.out.println(nse.get_case().getDescription() + " -> " + nse.getEval());
-	}
+        TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("svrab", "acne_vulgaris", "kontaktni_dermatitis")));
+        diseaseSimilarity.setSimilarity("svrab", "kontaktni_dermatitis", .5);
+        diseaseSimilarity.setSimilarity("svrab", "acne_vulgaris", .7);
+        diseaseSimilarity.setSimilarity("acne_vulgaris", "kontaktni_dermatitis", .4);
+        simConfig.addMapping(new Attribute("disease", PatientDescription.class), diseaseSimilarity);
 
-	public void postCycle() throws ExecutionException {
-		
+        TableSimilarity symptomSimilarity = new TableSimilarity((Arrays.asList("crvenilo", "plikovi", "crni_mitiseri", "beli_mitiseri"
+                , "cisticne_akne", "pristici", "osip", "perutanje", "isusena_koza")));
+        symptomSimilarity.setSimilarity("crvenilo", "plikovi", .5);
+        symptomSimilarity.setSimilarity("crni_mitiseri", "beli_mitiseri", .6);
+        symptomSimilarity.setSimilarity("crvenilo", "cisticne_akne", .3);
+        symptomSimilarity.setSimilarity("crvenilo", "pristici", .5);
+        symptomSimilarity.setSimilarity("crvenilo", "osip", .8);
+        symptomSimilarity.setSimilarity("pristici", "osip", .5);
+        symptomSimilarity.setSimilarity("perutanje", "isusena_koza", .6);
+        simConfig.addMapping(new Attribute("symptom", PatientDescription.class), symptomSimilarity);
+        TableSimilarity genderSimilarity = new TableSimilarity((Arrays.asList("Male", "Female")));
+        genderSimilarity.setSimilarity("Male", "Female", .8);
+        simConfig.addMapping(new Attribute("gender", PatientDescription.class), genderSimilarity);
+
 	}
 
 	public CBRCaseBase preCycle() throws ExecutionException {
@@ -102,7 +101,10 @@ public class CbrApplication implements StandardCBRApplication {
 		for (CBRCase c: cases)
 			System.out.println(c.getDescription());
 		return _caseBase;
-	}
+    }
+
+    public void postCycle() throws ExecutionException {
+
 
 	public static void main(String[] args) {
 		StandardCBRApplication recommender = new CbrApplication();
@@ -119,6 +121,16 @@ public class CbrApplication implements StandardCBRApplication {
 			symptoms.add("svrab");
 			symptoms.add("papule");
 			patientDescription.setSymptom(symptoms);
+      
+               //Mladji pacijenti -> veca sansa za pojavom akni
+//             patientDescription.setAge(27);
+//             patientDescription.setGender("Male");
+//             patientDescription.setSymptom("crvenilo");
+
+            //Stariji pacijenti -> veca sansa za kontaktni dermatitis
+//			patientDescription.setAge(50);
+//			patientDescription.setGender("Male");
+//			patientDescription.setSymptom("crvenilo");
 			
 			// TODO
 			
