@@ -48,7 +48,7 @@ public class CbrApplication implements StandardCBRApplication {
 //            patientDescription.setGender("Male");
 //
 //            symptoms.add("papule");
-//            symptoms.add("svrab");
+//            symptoms.add("suga");
 
             //Mladji pacijenti -> veca sansa za pojavom akni
 //            patientDescription.setAge(27);
@@ -60,7 +60,7 @@ public class CbrApplication implements StandardCBRApplication {
 
             patientDescription.setAge(26);
             patientDescription.setGender("Male");
-            patientDescription.setDisease("acne_vulgaris");
+            patientDescription.setDisease("akne");
             List<String> medication = new ArrayList<String>();
             medication.add("prednizon");
             List<String> symptoms = new ArrayList<String>();
@@ -105,53 +105,17 @@ public class CbrApplication implements StandardCBRApplication {
 		simConfig = new NNConfig(); // KNN configuration
 		simConfig.setDescriptionSimFunction(new Average());  // global similarity function = average
 
-		// simConfig.addMapping(new Attribute("attribute", CaseDescription.class), new Interval(5));
-
         simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(12));
-//		simConfig.addMapping(new Attribute("medication", PatientDescription.class), new MaxString());
         simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
-
-
-		// Equal - returns 1 if both individuals are equal, otherwise returns 0
-		// Interval - returns the similarity of two number inside an interval: sim(x,y) = 1-(|x-y|/interval)
-		// Threshold - returns 1 if the difference between two numbers is less than a threshold, 0 in the other case
-		// EqualsStringIgnoreCase - returns 1 if both String are the same despite case letters, 0 in the other case
-		// MaxString - returns a similarity value depending of the biggest substring that belong to both strings
-		// EnumDistance - returns the similarity of two enum values as the their distance: sim(x,y) = |ord(x) - ord(y)|
-		// EnumCyclicDistance - computes the similarity between two enum values as their cyclic distance
-		// Table - uses a table to obtain the similarity between two values. Allowed values are Strings or Enums. The table is read from a text file.
-		// TableSimilarity(List<String> values).setSimilarity(value1,value2,similarity)
-
-//        TableSimilarity medicationSimilarity = new TableSimilarity((Arrays.asList("hydroxyzine", "hydrocortisone", "eritromicin", "benadryl", "krotamiton_losion", "krotamiton_krema"
-//                , "benzoil_eritromicin", "benzoil_peroksid", "benzoil_klimadicin")));
-//        medicationSimilarity.setSimilarity("hydroxyzine", "hydrocortisone", .6);
-//        medicationSimilarity.setSimilarity("hydroxyzine", "benadryl", .5);
-//        medicationSimilarity.setSimilarity("hydrocortisone", "benadryl", .3);
-//        medicationSimilarity.setSimilarity("krotamiton_krema", "krotamiton_losion", .7);
-//        medicationSimilarity.setSimilarity("benzoil_eritromicin", "eritromicin", .7);
-//        medicationSimilarity.setSimilarity("benzoil_peroksid", "benzoil_eritromicin", .4);
-//        medicationSimilarity.setSimilarity("benzoil_peroksid", "benzoil_klimadicin", .6);
-//        medicationSimilarity.setSimilarity("eritromicin", "benzoil_eritromicin", .7);
-//        simConfig.addMapping(new Attribute("medication", PatientDescription.class), medicationSimilarity);
 
         simConfig.addMapping(new Attribute("medication", PatientDescription.class), new SimilarityFunction("medication"));
         simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new SimilarityFunction("symptom"));
-        TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("svrab", "acne_vulgaris", "kontaktni_dermatitis")));
-        diseaseSimilarity.setSimilarity("svrab", "kontaktni_dermatitis", .5);
-        diseaseSimilarity.setSimilarity("svrab", "acne_vulgaris", .7);
-        diseaseSimilarity.setSimilarity("acne_vulgaris", "kontaktni_dermatitis", .4);
+        TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("suga", "akne", "kontaktni_dermatitis")));
+        diseaseSimilarity.setSimilarity("suga", "kontaktni_dermatitis", .5);
+        diseaseSimilarity.setSimilarity("suga", "akne", .7);
+        diseaseSimilarity.setSimilarity("akne", "kontaktni_dermatitis", .4);
         simConfig.addMapping(new Attribute("disease", PatientDescription.class), diseaseSimilarity);
 
-//        TableSimilarity symptomSimilarity = new TableSimilarity((Arrays.asList("crvenilo", "plikovi", "crni_mitiseri", "beli_mitiseri"
-//                , "cisticne_akne", "pristici", "osip", "perutanje", "isusena_koza")));
-//        symptomSimilarity.setSimilarity("crvenilo", "plikovi", .5);
-//        symptomSimilarity.setSimilarity("crni_mitiseri", "beli_mitiseri", .6);
-//        symptomSimilarity.setSimilarity("crvenilo", "cisticne_akne", .3);
-//        symptomSimilarity.setSimilarity("crvenilo", "pristici", .5);
-//        symptomSimilarity.setSimilarity("crvenilo", "osip", .8);
-//        symptomSimilarity.setSimilarity("pristici", "osip", .5);
-//        symptomSimilarity.setSimilarity("perutanje", "isusena_koza", .6);
-//        simConfig.addMapping(new Attribute("symptom", PatientDescription.class), symptomSimilarity);
         TableSimilarity genderSimilarity = new TableSimilarity((Arrays.asList("Male", "Female")));
         genderSimilarity.setSimilarity("Male", "Female", .8);
         simConfig.addMapping(new Attribute("gender", PatientDescription.class), genderSimilarity);
