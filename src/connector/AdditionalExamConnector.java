@@ -1,6 +1,7 @@
 package connector;
 
-import model.MedicationDescription;
+import model.AdditionalExamDescription;
+import model.PatientDescription;
 import ucm.gaia.jcolibri.cbrcore.CBRCase;
 import ucm.gaia.jcolibri.cbrcore.CaseBaseFilter;
 import ucm.gaia.jcolibri.cbrcore.Connector;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class MedicationConnector implements Connector {
+public class AdditionalExamConnector implements Connector {
 
     @Override
     public Collection<CBRCase> retrieveAllCases() {
@@ -33,10 +34,12 @@ public class MedicationConnector implements Connector {
 
                 CBRCase cbrCase = new CBRCase();
 
-                MedicationDescription medicationDescription = new MedicationDescription();
-                medicationDescription.setDisease(values[5]);
-                medicationDescription.setMedication(Arrays.asList(values[6].split(",")));
-                cbrCase.setDescription(medicationDescription);
+                AdditionalExamDescription additionalExamDescription = new AdditionalExamDescription();
+
+                additionalExamDescription.setSymptoms(Arrays.asList(values[4].split(",")));
+                additionalExamDescription.setAdditionalExam(Arrays.asList(values[7].split(",")));
+
+                cbrCase.setDescription(additionalExamDescription);
                 cases.add(cbrCase);
             }
             br.close();
