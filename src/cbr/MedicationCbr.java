@@ -39,12 +39,13 @@ public class MedicationCbr implements StandardCBRApplication {
 
             CBRQuery query = new CBRQuery();
             MedicationDescription medicationDescription = new MedicationDescription();
-            //Situacija kada na osnovu jednog lijeka dobijamo informacije koji su jos lijekovi prepisivani
+            //Situacija kada na osnovu bolesti i lijekova koji se vec koriste  dobijamo informacije koji su jos lijekovi dobri
+            //hydrocortisone -> benadryl (0.4), hydrocortisone->hydroxyzine (0.6)
             List<String> medications = new ArrayList<String>();
-            medications.add("hydroxyzine");
+            medications.add("hydrocortisone");
+            medications.add("benzocaine");
             medicationDescription.setMedication(medications);
-
-//            medicationDescription.setDisease("kontaktni_dermatitis");
+            medicationDescription.setDisease("suga");
 
             query.setDescription(medicationDescription);
 
@@ -58,16 +59,11 @@ public class MedicationCbr implements StandardCBRApplication {
 
     public void cycle(CBRQuery query) throws ExecutionException {
         Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(_caseBase.getCases(), query, simConfig);
-        eval = SelectCases.selectTopKRR(eval, 20);
+        eval = SelectCases.selectTopKRR(eval, 6);
         System.out.println("Retrieved cases:");
         for (RetrievalResult nse : eval)
             System.out.println(nse.get_case().getDescription() + " -> " + nse.getEval());
     }
-
-    /**
-     * KNN configuration
-     */
-
     public void configure() throws ExecutionException {
         _connector = new MedicationConnector();
 
@@ -79,12 +75,11 @@ public class MedicationCbr implements StandardCBRApplication {
 
         TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("suga", "akne", "kontaktni_dermatitis")));
         diseaseSimilarity.setSimilarity("suga", "kontaktni_dermatitis", .5);
-        diseaseSimilarity.setSimilarity("suga", "akne", .7);
+        diseaseSimilarity.setSimilarity("suga", "akne", .3);
         diseaseSimilarity.setSimilarity("akne", "kontaktni_dermatitis", .4);
         simConfig.addMapping(new Attribute("disease", MedicationDescription.class), diseaseSimilarity);
 
     }
-
     public CBRCaseBase preCycle() throws ExecutionException {
         _caseBase.init(_connector);
         java.util.Collection<CBRCase> cases = _caseBase.getCases();

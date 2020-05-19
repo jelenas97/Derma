@@ -21,7 +21,7 @@ public class MedicationConnector implements Connector {
         LinkedList<CBRCase> cases = new LinkedList<CBRCase>();
 
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(FileIO.openFile("data/data.csv")));
+            BufferedReader br = new BufferedReader(new InputStreamReader(FileIO.openFile("data/dataset-derma.csv")));
             if (br == null)
                 throw new Exception("Error opening file");
 
@@ -34,8 +34,8 @@ public class MedicationConnector implements Connector {
                 CBRCase cbrCase = new CBRCase();
 
                 MedicationDescription medicationDescription = new MedicationDescription();
-                medicationDescription.setDisease(values[6]);
-                medicationDescription.setMedication(Arrays.asList(values[5].split(",")));
+                medicationDescription.setDisease(values[5]);
+                medicationDescription.setMedication(Arrays.asList(values[6].split(",")));
                 cbrCase.setDescription(medicationDescription);
                 cases.add(cbrCase);
             }

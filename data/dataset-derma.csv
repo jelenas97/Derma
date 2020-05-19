@@ -593,7 +593,7 @@ Pavle;Budic;3;Musko;plikovi;kontaktni_dermatitis;neomicin;test_koze
 Pavle;Jonkic;56;Musko;osip;kontaktni_dermatitis;benzokain;epikutani_test
 Nemanja;Kenjic;77;Musko;svarb;kontaktni_dermatitis;neomicin;epikutani_test
 Sasa;Manasic;91;Musko;otok_genitalija;kontaktni_dermatitis;glukokortikoidi;kalijumhidroksid_test
-Igor;Kunic;33;Musko;osip;kontaktni_dermatitis;difenhidramin;alergoloske_kozne_probe
+Tatjana;Kunic;33;Zensko;osip,svrab;kontaktni_dermatitis;difenhidramin;alergoloske_kozne_probe
 Ilija;Panic;59;Musko;otok_genitalija;kontaktni_dermatitis;heksaklorofen;test_koze
 Stefan;Jergic;30;Musko;isusena_koza;kontaktni_dermatitis;penicilin;kalijumhidroksid_test
 Milutin;Gordic;44;Musko;isusena_koza;kontaktni_dermatitis;hladne_obloge;test_koze
@@ -898,3 +898,8 @@ Jovan;Boskovic;16;Musko;pustule;akne;benzoil_klimadicin;test_bakterijske_kulture
 Nenad;Vlajic;37;Musko;nodusi;akne;tazaroten_gel;test_bakterijske_kulture
 Nikola;Budic;81;Musko;potkozne_bubuljice;akne;tazaroten;hormonalni_test
 Nedeljko;Dragic;96;Musko;otvorene_rane;akne;tetraciklin;pregled_koze
+Nikola;Milosevic;18;Musko;osip,pristici;suga;hydroxyzine,benadryl;pregled_koze
+Nemanja;Nikolic;57;Musko;osip,pristici;suga;hydrocortisone,benadryl;pregled_koze
+Marija;Krsic;47;Zensko;osip,pristici;suga;hydrocortisone,benadryl,loratadin;pregled_koze
+Milica;Nikolic;22;Zensko;osip;suga;krotamiton_krema,krotamiton_losion;pregled_koze
+Milica;Nemanjic;22;Zensko;osip;suga;benzocaine,krotamiton_krema;pregled_koze
