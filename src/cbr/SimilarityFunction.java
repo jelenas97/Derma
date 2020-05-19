@@ -62,7 +62,7 @@ public class SimilarityFunction implements LocalSimilarityFunction {
                     res += foundValue;
                 }
             }
-            res = (res / first.size()) * 1.6;
+            res = (res / first.size());
             return res;
         } catch (Exception e) {
             return 0;
