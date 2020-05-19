@@ -1,11 +1,7 @@
 package cbr;
 
-import connector.CsvConnector;
 import connector.DiseaseConnector;
-import connector.MedicationConnector;
 import model.DiseaseDescription;
-import model.MedicationDescription;
-import model.PatientDescription;
 import similarity.TableSimilarity;
 import ucm.gaia.jcolibri.casebase.LinealCaseBase;
 import ucm.gaia.jcolibri.cbraplications.StandardCBRApplication;
@@ -14,8 +10,6 @@ import ucm.gaia.jcolibri.exception.ExecutionException;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNConfig;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNScoringMethod;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.global.Average;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equal;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
 import ucm.gaia.jcolibri.method.retrieve.RetrievalResult;
 import ucm.gaia.jcolibri.method.retrieve.selection.SelectCases;
 
@@ -68,7 +62,7 @@ public class DiseaseCbr implements StandardCBRApplication {
     @Override
     public void cycle(CBRQuery cbrQuery) throws ExecutionException {
         Collection<RetrievalResult> eval = NNScoringMethod.evaluateSimilarity(_caseBase.getCases(), cbrQuery, simConfig);
-        eval = SelectCases.selectTopKRR(eval, 20);
+        eval = SelectCases.selectTopKRR(eval, 7);
         System.out.println("Retrieved cases:");
         for (RetrievalResult nse : eval)
             System.out.println(nse.get_case().getDescription() + " -> " + nse.getEval());

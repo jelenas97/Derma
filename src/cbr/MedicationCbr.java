@@ -42,10 +42,11 @@ public class MedicationCbr implements StandardCBRApplication {
             //Situacija kada na osnovu bolesti i lijekova koji se vec koriste  dobijamo informacije koji su jos lijekovi dobri
             //hydrocortisone -> benadryl (0.4), hydrocortisone->hydroxyzine (0.6)
             List<String> medications = new ArrayList<String>();
-//            medications.add("hydrocortisone");
-//            medications.add("benzocaine");
-//            medicationDescription.setMedication(medications);
-//            medicationDescription.setDisease("suga");
+            medications.add("hydrocortisone");
+            medications.add("benzocaine");
+            medicationDescription.setMedication(medications);
+            medicationDescription.setDisease("suga");
+
             query.setDescription(medicationDescription);
 
             recommender.cycle(query);
@@ -63,11 +64,6 @@ public class MedicationCbr implements StandardCBRApplication {
         for (RetrievalResult nse : eval)
             System.out.println(nse.get_case().getDescription() + " -> " + nse.getEval());
     }
-
-    /**
-     * KNN configuration
-     */
-
     public void configure() throws ExecutionException {
         _connector = new MedicationConnector();
 
@@ -84,7 +80,6 @@ public class MedicationCbr implements StandardCBRApplication {
         simConfig.addMapping(new Attribute("disease", MedicationDescription.class), diseaseSimilarity);
 
     }
-
     public CBRCaseBase preCycle() throws ExecutionException {
         _caseBase.init(_connector);
         java.util.Collection<CBRCase> cases = _caseBase.getCases();

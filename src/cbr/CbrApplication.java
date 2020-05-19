@@ -43,37 +43,21 @@ public class CbrApplication implements StandardCBRApplication {
 
             CBRQuery query = new CBRQuery();
             PatientDescription patientDescription = new PatientDescription();
-            patientDescription.setAge(33);
-            patientDescription.setGender("Musko");
-            List<String> symptoms = new ArrayList<String>();
-            symptoms.add("otok_na_licu");
-            symptoms.add("osip");
-
-            //Mladji pacijenti
-//            patientDescription.setAge(29);
-//            patientDescription.setGender("Zensko");
+//            patientDescription.setAge(33);
+//            patientDescription.setGender("Musko");
 //            List<String> symptoms = new ArrayList<String>();
-//            symptoms.add("papule");
-//            symptoms.add("crvenilo");
+//            symptoms.add("otok_na_licu");
 //            symptoms.add("osip");
 
-
-//            patientDescription.setAge(26);
-//            patientDescription.setGender("Male");
-//            patientDescription.setDisease("akne");
-//            List<String> medication = new ArrayList<String>();
-//            medication.add("prednizon");
-//            List<String> symptoms = new ArrayList<String>();
-//            symptoms.add("papule");
+            //Mladji pacijenti
+            patientDescription.setAge(29);
+            patientDescription.setGender("Zensko");
+            List<String> symptoms = new ArrayList<String>();
+            symptoms.add("papule");
+            symptoms.add("crvenilo");
+            symptoms.add("osip");
 
             patientDescription.setSymptom(symptoms);
-
-            //Stariji pacijenti -> veca sansa za kontaktni dermatitis
-//			patientDescription.setAge(50);
-//			patientDescription.setGender("Male");
-//			patientDescription.setSymptom("crvenilo");
-
-            // TODO
 
             query.setDescription(patientDescription);
 
@@ -93,10 +77,6 @@ public class CbrApplication implements StandardCBRApplication {
         return _caseBase;
     }
 
-    /**
-     * KNN configuration
-     */
-
 	public void configure() throws ExecutionException {
 		_connector =  new CsvConnector();
 
@@ -107,7 +87,7 @@ public class CbrApplication implements StandardCBRApplication {
 
         simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(12));
 
-       // simConfig.addMapping(new Attribute("medication", PatientDescription.class), new SimilarityFunction("medication"));
+        simConfig.addMapping(new Attribute("medication", PatientDescription.class), new SimilarityFunction("medication"));
         simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new SimilarityFunction("symptom"));
         TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("suga", "akne", "kontaktni_dermatitis")));
         diseaseSimilarity.setSimilarity("suga", "kontaktni_dermatitis", .5);
