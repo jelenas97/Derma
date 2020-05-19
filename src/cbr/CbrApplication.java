@@ -10,7 +10,6 @@ import ucm.gaia.jcolibri.exception.ExecutionException;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNConfig;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.NNScoringMethod;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.global.Average;
-import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Equal;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.local.Interval;
 import ucm.gaia.jcolibri.method.retrieve.RetrievalResult;
 import ucm.gaia.jcolibri.method.retrieve.selection.SelectCases;
@@ -44,27 +43,28 @@ public class CbrApplication implements StandardCBRApplication {
 
             CBRQuery query = new CBRQuery();
             PatientDescription patientDescription = new PatientDescription();
-//            patientDescription.setAge(33);
-//            patientDescription.setGender("Male");
-//
-//            symptoms.add("papule");
-//            symptoms.add("suga");
+            patientDescription.setAge(33);
+            patientDescription.setGender("Musko");
+            List<String> symptoms = new ArrayList<String>();
+            symptoms.add("otok_na_licu");
+            symptoms.add("osip");
 
-            //Mladji pacijenti -> veca sansa za pojavom akni
-//            patientDescription.setAge(27);
-//            patientDescription.setGender("Male");
+            //Mladji pacijenti
+//            patientDescription.setAge(29);
+//            patientDescription.setGender("Zensko");
 //            List<String> symptoms = new ArrayList<String>();
 //            symptoms.add("papule");
-//            symptoms.add("plikovi");
+//            symptoms.add("crvenilo");
+//            symptoms.add("osip");
 
 
-            patientDescription.setAge(26);
-            patientDescription.setGender("Male");
-            patientDescription.setDisease("akne");
-            List<String> medication = new ArrayList<String>();
-            medication.add("prednizon");
-            List<String> symptoms = new ArrayList<String>();
-            symptoms.add("papule");
+//            patientDescription.setAge(26);
+//            patientDescription.setGender("Male");
+//            patientDescription.setDisease("akne");
+//            List<String> medication = new ArrayList<String>();
+//            medication.add("prednizon");
+//            List<String> symptoms = new ArrayList<String>();
+//            symptoms.add("papule");
 
             patientDescription.setSymptom(symptoms);
 
@@ -106,9 +106,8 @@ public class CbrApplication implements StandardCBRApplication {
 		simConfig.setDescriptionSimFunction(new Average());  // global similarity function = average
 
         simConfig.addMapping(new Attribute("age", PatientDescription.class), new Interval(12));
-        simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new Equal());
 
-        simConfig.addMapping(new Attribute("medication", PatientDescription.class), new SimilarityFunction("medication"));
+       // simConfig.addMapping(new Attribute("medication", PatientDescription.class), new SimilarityFunction("medication"));
         simConfig.addMapping(new Attribute("symptom", PatientDescription.class), new SimilarityFunction("symptom"));
         TableSimilarity diseaseSimilarity = new TableSimilarity((Arrays.asList("suga", "akne", "kontaktni_dermatitis")));
         diseaseSimilarity.setSimilarity("suga", "kontaktni_dermatitis", .5);
@@ -116,8 +115,8 @@ public class CbrApplication implements StandardCBRApplication {
         diseaseSimilarity.setSimilarity("akne", "kontaktni_dermatitis", .4);
         simConfig.addMapping(new Attribute("disease", PatientDescription.class), diseaseSimilarity);
 
-        TableSimilarity genderSimilarity = new TableSimilarity((Arrays.asList("Male", "Female")));
-        genderSimilarity.setSimilarity("Male", "Female", .8);
+        TableSimilarity genderSimilarity = new TableSimilarity((Arrays.asList("Musko", "Zensko")));
+        genderSimilarity.setSimilarity("Musko", "Zensko", .8);
         simConfig.addMapping(new Attribute("gender", PatientDescription.class), genderSimilarity);
 
 	}

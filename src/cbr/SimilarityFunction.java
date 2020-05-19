@@ -1,6 +1,5 @@
 package cbr;
 
-import ucm.gaia.jcolibri.exception.NoApplicableSimilarityFunctionException;
 import ucm.gaia.jcolibri.method.retrieve.NNretrieval.similarity.LocalSimilarityFunction;
 
 import java.util.ArrayList;
@@ -21,14 +20,10 @@ public class SimilarityFunction implements LocalSimilarityFunction {
     }
 
     @Override
-    public double compute(Object list1, Object list2) throws NoApplicableSimilarityFunctionException {
+    public double compute(Object list1, Object list2) {
         try {
             if ((list1 == null) || (list2 == null))
                 return 0;
-            if (!(list1 instanceof List))
-                throw new NoApplicableSimilarityFunctionException(this.getClass(), list1.getClass());
-            if (!(list2 instanceof List))
-                throw new NoApplicableSimilarityFunctionException(this.getClass(), list2.getClass());
 
             List list = (List) list1;
             List input = (List) list2;
@@ -62,7 +57,7 @@ public class SimilarityFunction implements LocalSimilarityFunction {
                     res += foundValue;
                 }
             }
-            res = (res / first.size()) * 1.6;
+            res = (res / first.size());
             return res;
         } catch (Exception e) {
             return 0;
@@ -75,8 +70,8 @@ public class SimilarityFunction implements LocalSimilarityFunction {
         this.hashMap.put("hydrocortisone-hydroxyzine", 0.6);
         this.hashMap.put("hydroxyzine-benadryl", 0.5);
         this.hashMap.put("benadryl-hydroxyzine", 0.5);
-        this.hashMap.put("hydrocortisone-benadryl", 0.3);
-        this.hashMap.put("benadryl-hydrocortisone", 0.3);
+        this.hashMap.put("hydrocortisone-benadryl", 0.4);
+        this.hashMap.put("benadryl-hydrocortisone", 0.4);
         this.hashMap.put("krotamiton_krema-krotamiton_losion", 0.7);
         this.hashMap.put("krotamiton_losion-krotamiton_krema", 0.7);
         this.hashMap.put("benzoil_peroksid-benzoil_eritromicin", 0.4);
