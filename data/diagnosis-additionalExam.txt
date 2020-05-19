@@ -1,0 +1,11 @@
+dodatni_pregled(suga,biopsija).
+dodatni_pregled(suga,test_koze).
+dodatni_pregled(suga,kompletna_krvna_slika).
+
+dodatni_pregled(kontaktni_dermatitis,test_koze).
+dodatni_pregled(kontaktni_dermatitis,alergoloski_test).
+dodatni_pregled(kontaktni_dermatitis,kalijumhidroksid_test).
+
+dodatni_pregled(akne,pregled_koze).
+dodatni_pregled(akne,hormonalni_test).
+dodatni_pregled(akne,test_bakterijske_kulture).
